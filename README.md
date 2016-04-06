@@ -85,3 +85,5 @@ You can use SpyUploader in your own SNAPconnect application by importing and set
 ## License
 
 Copyright © 2016 [Synapse Wireless](http://www.synapse-wireless.com/), licensed under the [Apache License v2.0](LICENSE.md).
+
+<!-- meta-tags: vvv-snappy, vvv-snapconnect, vvv-python, vvv-example -->
