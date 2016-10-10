@@ -2,7 +2,7 @@
 """
 SpyUploader() - This class provides an API for sending new SPY files to SNAP Nodes.
 
-In addition to showing which SNAP Connect functions to invoke to perform the transfer,
+In addition to showing which SNAPconnect functions to invoke to perform the transfer,
 this class also adds "upload retries" - if an upload times out, this object will try
 again, up to MAX_PROG_RETRIES.
 
@@ -21,7 +21,7 @@ import binascii
 from snaplib import ScriptsManager
 from snaplib import SnappyUploader
 
-NO_INSTANCE = -1 # You have tried to initiate a SPY Upload but you have not yet provided a SNAP Connect instance to perform the underlying communications
+NO_INSTANCE = -1 # You have tried to initiate a SPY Upload but you have not yet provided a SNAPconnect instance to perform the underlying communications
 NO_SUCH_FILE = -2 # You tried to upload a SPY file that does not exist (check the PATH)
 TOO_MANY_RETRIES = -3 # Maximum number of upload attempts exceeded
 
@@ -54,7 +54,7 @@ class SpyUploader:
         self.WAIT_TIME = 100             # Time to wait for a remote device to respond to upload requests
         self.respTimer = 0               # Timer used to tell if commands are taking too long (during the programming process)
         self.stopTimer = False           # Flag that keeps the timer tick from rescheduling itself
-        self.MAX_PROG_RETRIES = 3        #  The system will attempt to retry the programming process this number of times
+        self.MAX_PROG_RETRIES = 3        # The system will attempt to retry the programming process this number of times
         self.progRetryNum = 0            # Track the number of retries
         self.retryFlag = False
 
@@ -72,17 +72,17 @@ class SpyUploader:
 
     ##-------------------------------------------------------------------------------------------
     ##
-    ##  Assign an instance of SNAP Connect for the uploader to use.
+    ##  Assign an instance of SNAPconnect for the uploader to use.
     ##
     ##  This must be done after the creation of the class itself in order to properly
     ##  expose uploader functions to the network. The uploader will not operate if it
-    ##  does not know about a proper SNAP Connect.
+    ##  does not know about a proper SNAPconnect.
     ##
-    ##  Parameters: snapComInstance - SNAP Connect object
+    ##  Parameters: snapComInstance - SNAPconnect object
     ##
     ##-------------------------------------------------------------------------------------------
     def assign_SnapCom(self, snapComInstance):
-        """Assign the SNAP Connect instance to use for this SNAPpy Script uploader"""
+        """Assign the SNAPconnect instance to use for this SNAPpy Script uploader"""
         self.snapConn = snapComInstance
 
     ##-------------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ class SpyUploader:
     ##-------------------------------------------------------------------------------------------
     ##
     ## Function to begin the upload process
-    ## - Requires a SNAP Connect instance to be in place
+    ## - Requires a SNAPconnect instance to be in place
     ## - Requires a callback instance to be in place
     ##
     ##
@@ -174,8 +174,8 @@ class SpyUploader:
         self.retryFlag = False
         self.respTimer = 0                  # Timer used to tell if commands are taking too long
         self.progRetryNum = 0
-        self.targetAddr = None              # SNAP Address of the remote device to update
-        self.fileName = ''                  # Filename too
+        self.targetAddr = None              # Clear out the SNAP Address of the remote device
+        self.fileName = ''                  # Clear out the filename of the remote device
 
         self.ourCallback.finishedSpyUpgrade(errCode)
 
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     # 1) You have to provide a "callback object" so that the module can
     #    tell you how the upload turned out.
     # 2) You must "pass-through" any tellVmStat() messages to the
-    #    spy_upload_mgr (SPY Upload Manager) in SNAP Connect.
+    #    spy_upload_mgr (SPY Upload Manager) in SNAPconnect.
     # 3) You must forward a "reboot received" RPC call to spy_upload_mgr
     #
     
@@ -272,7 +272,7 @@ if __name__ == "__main__":
     # may want to take additional actions based on tellVmStat() responses.
     #
     def tellVmStat(arg, val):
-        """handle received tellVmStat() RPC calls"""
+        """Handle received tellVmStat() RPC calls"""
         comm.spy_upload_mgr.onTellVmStat(comm.rpc_source_addr(), arg, val)
         
         # Your program might take additional actions here...
@@ -295,11 +295,11 @@ if __name__ == "__main__":
         funcdir = { 'tellVmStat' : tellVmStat,
                     'su_recvd_reboot' : su_recvd_reboot }
 
-        # Create a SNAP Connect object to do communications (comm) for us        
+        # Create a SNAPconnect object to do communications (comm) for us
         comm = snap.Snap(funcs=funcdir)
         
         # Note the hardcoded COM1 usage. See other examples for other connection possibilities.
-        # Here the focus is on the script upload process, not all the different ways SNAP Connect
+        # Here the focus is on the script upload process, not all the different ways SNAPconnect
         # can communicate with other nodes.
         comm.open_serial(SERIAL_TYPE, SERIAL_PORT)
         
@@ -319,7 +319,7 @@ if __name__ == "__main__":
 
         # For this example, only keep communications open until the transfer has been
         # completed, or the number of transfer attempts have been exhausted.
-        # If we changed it to a "while True:" loop, then the SNAP Connect instance
+        # If we changed it to a "while True:" loop, then the SNAPconnect instance
         # would continue to run and route traffic even after the transfer was done.
         while uploader.progInProgress:
             comm.poll()
